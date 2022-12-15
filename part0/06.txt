@@ -1,0 +1,16 @@
+title New note in Single page app diagram
+
+note over browser:
+updates notes array and displays
+updated list
+end note
+
+browser->server: HTTP POST /exampleapp/new_note_spa
+
+
+note over server:
+The server creates a new note object,
+and adds it to an array called notes.
+end note
+
+server->browser: HTTP 201 {"message":"note created"}
