@@ -1,5 +1,5 @@
 import { useState } from 'react'
-//wrong commit massage needed to be 1.10
+
 
 const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 
@@ -11,17 +11,19 @@ const Statistics = ({good, neutral, bad}) => {
 
   return (
     <div>
-      <StatisticLine text="good" value={good} />
-      <StatisticLine text="neutral" value={neutral} />
-      <StatisticLine text="bad" value={bad} />
-      <StatisticLine text="all" value={sum} />
-      <StatisticLine text="average" value={(-bad+good)/sum} />
-      <StatisticLine text="positive" value={`${(good*100)/sum}%`} />
+      <table>
+        <StatisticLine text="good" value={good} />
+        <StatisticLine text="neutral" value={neutral} />
+        <StatisticLine text="bad" value={bad} />
+        <StatisticLine text="all" value={sum} />
+        <StatisticLine text="average" value={(-bad+good)/sum} />
+        <StatisticLine text="positive" value={`${(good*100)/sum}%`} />
+      </table>
     </div>
   )
 }
 
-const StatisticLine = ({text, value}) => <p>{text} {value}</p>
+const StatisticLine = ({text, value}) => <tr><td>{text}</td> <td>{value}</td></tr>
 
 
 const App = () => {
