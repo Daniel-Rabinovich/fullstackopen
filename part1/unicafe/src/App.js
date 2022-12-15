@@ -7,25 +7,28 @@ const Statistics = ({good, neutral, bad}) => {
 
   if(!(good || neutral || bad)) return <div>no feedback given</div>
 
+  const sum = good + bad + neutral
+
   return (
     <div>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {good + neutral + bad}</p>
-      <p>average {(good + (-1*bad))/(good+bad+neutral)}</p>
-      <p>positive {(good*100)/(good+bad+neutral)} %</p>
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={sum} />
+      <StatisticLine text="average" value={(-bad+good)/sum} />
+      <StatisticLine text="positive" value={`${(good*100)/sum}%`} />
     </div>
   )
 }
+
+const StatisticLine = ({text, value}) => <p>{text} {value}</p>
+
 
 const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-
-  const data = {good, neutral, bad}
 
   return (
     <div>
