@@ -20,6 +20,7 @@ const App = () => {
   const [votes, setVote] = useState([...anecdotes].map(i => 0))
 
   const random = max => Math.floor(Math.random() * max)
+  const indexMax = (votes) => votes.indexOf(Math.max(...votes))
 
   const setToVote = (selected) => {
     const copy = [...votes]
@@ -29,9 +30,12 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <Massage text={anecdotes[selected]} votes={votes[selected]} />
       <Button handleClick={() => setToVote(selected)} text="vote"/>
       <Button handleClick={() => setSelected(random(anecdotes.length))} text="next anecdote" />
+      <h1>Anecdote with most votes</h1>
+      <Massage text={anecdotes[indexMax(votes)]} votes={votes[indexMax(votes)]} />
     </div>
   )
 }
