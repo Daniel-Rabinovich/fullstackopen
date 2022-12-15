@@ -12,18 +12,20 @@ const Statistics = ({good, neutral, bad}) => {
   return (
     <div>
       <table>
-        <StatisticLine text="good" value={good} />
-        <StatisticLine text="neutral" value={neutral} />
-        <StatisticLine text="bad" value={bad} />
-        <StatisticLine text="all" value={sum} />
-        <StatisticLine text="average" value={(-bad+good)/sum} />
-        <StatisticLine text="positive" value={`${(good*100)/sum}%`} />
+        <tbody>
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="all" value={sum} />
+          <StatisticLine text="average" value={(-bad+good)/sum} />
+          <StatisticLine text="positive" value={`${(good*100)/sum}%`} />
+        </tbody>
       </table>
     </div>
   )
 }
 
-const StatisticLine = ({text, value}) => <tr><td>{text}</td> <td>{value}</td></tr>
+const StatisticLine = ({text, value}) => <tr><td>{text}</td><td>{value}</td></tr>
 
 
 const App = () => {
