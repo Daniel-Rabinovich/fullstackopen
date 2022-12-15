@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+//wrong commit massage needed to be 1.10
 
 const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 
