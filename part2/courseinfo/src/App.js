@@ -28,6 +28,7 @@ const Content = (props) => {
           (item) => <Part name={item.name} exercises={item.exercises} key={item.id.toString()} />
         )
       }
+      <Statistics parts={parts} />
     </div>
   )
 }
@@ -38,6 +39,15 @@ const Part = (props) => {
     <li>
       {name} {exercises}
     </li>
+  )
+}
+
+const Statistics = (props) => {
+  const parts = props.parts
+  return (
+    <div>
+      <p>total of {parts.reduce((sum,item) => sum + item.exercises,0)} exercises</p>
+    </div>
   )
 }
 
@@ -60,6 +70,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      { // added as a test
+        name:"Redux",
+        exercises: 11,
+        id: 4
       }
     ]
   }
