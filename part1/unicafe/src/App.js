@@ -5,6 +5,8 @@ const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</bu
 
 const Statistics = ({good, neutral, bad}) => {
 
+  if(!(good || neutral || bad)) return <div>no feedback given</div>
+
   return (
     <div>
       <p>good {good}</p>
