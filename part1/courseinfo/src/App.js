@@ -1,4 +1,4 @@
-// part 1.1 fullstackopen course
+// part 1 fullstackopen course
 
 
 // Header component
