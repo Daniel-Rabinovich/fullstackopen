@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 
-const Massage = ({text}) => <div>{text}</div>
+const Massage = ({text, votes}) => <div>{text}<br/>Has {votes} votes</div>
 
 const App = () => {
   const anecdotes = [
@@ -17,12 +17,20 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
+  const [votes, setVote] = useState([...anecdotes].map(i => 0))
 
   const random = max => Math.floor(Math.random() * max)
 
+  const setToVote = (selected) => {
+    const copy = [...votes]
+    copy[selected] += 1
+    setVote(copy)
+  }
+
   return (
     <div>
-      <Massage text={anecdotes[selected]} />
+      <Massage text={anecdotes[selected]} votes={votes[selected]} />
+      <Button handleClick={() => setToVote(selected)} text="vote"/>
       <Button handleClick={() => setSelected(random(anecdotes.length))} text="next anecdote" />
     </div>
   )
