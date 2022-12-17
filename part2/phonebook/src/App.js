@@ -1,12 +1,7 @@
 import { useState } from 'react'
-
-const Person = (props) => {
-  if (props.show){
-    return <li>{props.name} {props.number}</li>
-  } else {
-    return <></>
-  }
-}
+import Filter from './components/filter'
+import PersonForm from './components/personForm'
+import Persons from './components/persons'
 
 
 const App = () => {
@@ -21,7 +16,7 @@ const App = () => {
 
   const addNewPerson = (e) => {
     e.preventDefault()
-    const sameName = persons.filter(person => person.name === newName)
+    const sameName = persons.filter(person => person.name === newName).length
     const nameExists = sameName.length > 0 ? true : false
 
     if (nameExists) {
@@ -63,32 +58,17 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <form>
-        <div>
-          filter showen with:
-          <input onChange={handleSearchChange}/>
-        </div>
-      </form>
+      <Filter change={handleSearchChange} />
       <h2>add a new</h2>
-      <form onSubmit={addNewPerson}>
-        <div>
-          name: <input value={newName}
-          onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber}
-          onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        formOnSubmit={addNewPerson}
+        nameValue={newName}
+        nameOnChange={handleNameChange}
+        numberValue={newNumber}
+        numberOnChange={handleNumberChange}
+      />
       <h2>Numbers</h2>
-      <ul>
-        {persons.map(person =>
-          <Person key={person.id.toString()} name={person.name} number={person.number} show={person.show}/>
-        )}
-      </ul>
+      <Persons data={persons} />
     </div>
   )
 }
