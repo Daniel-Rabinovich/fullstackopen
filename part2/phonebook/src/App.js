@@ -3,6 +3,7 @@ import axios from 'axios'
 import Filter from './components/filter'
 import PersonForm from './components/personForm'
 import Persons from './components/persons'
+import personsService from './services/persons'
 
 
 const App = () => {
@@ -13,7 +14,7 @@ const App = () => {
 
   const addNewPerson = (e) => {
     e.preventDefault()
-    const url = "http://localhost:3001/persons"
+
     const sameName = persons.filter(person => person.name === newName).length
     const nameExists = sameName.length > 0 ? true : false
 
@@ -26,9 +27,9 @@ const App = () => {
         show: true
       }
 
-      axios
-      .post(url, personObject)
-      .then(response => setPersons(persons.concat(response.data)))
+      personsService
+      .create(personObject)
+      .then(response => setPersons(persons.concat(response)))
     }
     setNewName('')
     setNewNumber('')
@@ -54,12 +55,11 @@ const App = () => {
     setPersons(newPersons)
   }
 
+  // fetch persons from server
   useEffect(() => {
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      setPersons(response.data)
-    })
+    personsService
+    .getAll()
+    .then(response => setPersons(response))
   }, [])
 
 
