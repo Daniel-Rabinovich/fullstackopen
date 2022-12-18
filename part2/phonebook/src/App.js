@@ -62,6 +62,17 @@ const App = () => {
     .then(response => setPersons(response))
   }, [])
 
+  // remove person from server
+  const removePerson = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personsService
+      .remove(id)
+      .then(response => {
+        const newPersons = persons.filter(person => person.id !== id)
+        setPersons(newPersons)
+      })
+    }
+  }
 
   return (
     <div>
@@ -76,7 +87,7 @@ const App = () => {
         numberOnChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons data={persons} />
+      <Persons data={persons} removePerson={removePerson}/>
     </div>
   )
 }
