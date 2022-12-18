@@ -13,6 +13,7 @@ const App = () => {
 
   const addNewPerson = (e) => {
     e.preventDefault()
+    const url = "http://localhost:3001/persons"
     const sameName = persons.filter(person => person.name === newName).length
     const nameExists = sameName.length > 0 ? true : false
 
@@ -22,10 +23,12 @@ const App = () => {
       const personObject = {
         name: newName,
         number: newNumber,
-        id: persons.length+1,
         show: true
       }
-      setPersons(persons.concat(personObject))
+
+      axios
+      .post(url, personObject)
+      .then(response => setPersons(persons.concat(response.data)))
     }
     setNewName('')
     setNewNumber('')
@@ -41,7 +44,7 @@ const App = () => {
 
   const handleSearchChange = (e) => {
     const newSearch = e.target.value.toLowerCase()
-    const newPersons = persons.reduce((list, person)=>{
+    const newPersons = persons.reduce((list, person) => {
       const newPerson = {
         ...person,
         show: person.name.toLowerCase().includes(newSearch)
