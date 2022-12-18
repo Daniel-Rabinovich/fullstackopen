@@ -7,7 +7,6 @@ import axios from 'axios'
 
 function App() {
 
-  const [search, setSearch] = useState('')
   const [countries, setCountries] = useState([])
   const [filteredCountries, setFilteredCountries] = useState([])
 
@@ -22,7 +21,6 @@ function App() {
 
   // update search state
   const handleSearchChange = (e) => {
-    setSearch(e.target.value)
     let newList = []
     for(let i=0; i<countries.length;i++){
         const countryName = countries[i].name.common.toLowerCase()
