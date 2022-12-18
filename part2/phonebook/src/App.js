@@ -15,11 +15,21 @@ const App = () => {
   const addNewPerson = (e) => {
     e.preventDefault()
 
-    const sameName = persons.filter(person => person.name === newName).length
+    const sameName = persons.filter(person => person.name === newName)
     const nameExists = sameName.length > 0 ? true : false
 
     if (nameExists) {
-      alert(`${newName} is already added to the phonebook!`)
+      if (window.confirm(`${newName} is already added to the phone book,
+        replace the old number with a new one?`)) {
+        const person = persons.find(person=> person.name === newName)
+        const changedPerson = { ...person, number: newNumber }
+
+        personsService
+        .change(changedPerson)
+        .then(response => {
+          setPersons(persons.map(p => p.id !== changedPerson.id ? p : changedPerson))
+        })
+      }
     } else {
       const personObject = {
         name: newName,
