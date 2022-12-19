@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/filter'
 import PersonForm from './components/personForm'
 import Persons from './components/persons'
 import personsService from './services/persons'
-
+import Notification from './components/notification'
+import './index.css'
 
 const App = () => {
 
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   const addNewPerson = (e) => {
     e.preventDefault()
@@ -39,7 +40,13 @@ const App = () => {
 
       personsService
       .create(personObject)
-      .then(response => setPersons(persons.concat(response)))
+      .then(response => {
+        setPersons(persons.concat(response))
+        setNotificationMessage(`Added ${response.name}`)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+      })
     }
     setNewName('')
     setNewNumber('')
@@ -87,6 +94,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notificationMessage}/>
       <Filter change={handleSearchChange} />
       <h2>add a new</h2>
       <PersonForm
