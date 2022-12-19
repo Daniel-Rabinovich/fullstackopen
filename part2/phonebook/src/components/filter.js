@@ -1,10 +1,10 @@
-const Filter = (props) => {
+const Filter = ({ change }) => {
 
     return (
         <div>
             <form>
                 filter showen with:
-                <input onChange={props.change} />
+                <input onChange={change} />
             </form>
         </div>
     )

@@ -1,33 +1,30 @@
 
-const Person = (props) => {
+const Person = ({person, removeP}) => {
 
-  const removePerson = () => {
-    props.removePerson(props.id, props.data.name)
-  }
+  const removePerson = () => removeP(person)
 
-  if (props.data.show){
-    return (
-      <li>
-        {props.data.name} {props.data.number}
-        <button onClick={removePerson}>delete</button>
-      </li>
-    )
-  } else {
-    return <></>
-  }
+  if (!person.show) return <></>
+
+  return (
+    <li>
+      {person.name} {person.number}
+      <button onClick={removePerson}>delete</button>
+    </li>
+  )
 }
 
 
-const Persons = (props) => {
+
+const Persons = ({persons, removeP}) => {
 
     return (
         <ul>
-            {props.data.map(person =>
+            {persons.map(p =>
                 <Person
-                key={person.id.toString()}
-                id={person.id}
-                data={person}
-                removePerson={props.removePerson}/>
+                  key={p.id.toString()}
+                  person={p}
+                  removeP={removeP}
+                />
             )}
         </ul>
     )

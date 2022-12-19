@@ -8,68 +8,106 @@ import './index.css'
 
 const App = () => {
 
+  // states
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState('notification')
 
+  // send notification when function called
+  const sendNotification = (msg, type, length) => {
+      setNotificationType(type)
+      setNotificationMessage(msg)
+      setTimeout(() => {
+            setNotificationMessage(null)
+      }, length)
+  }
+
+  // find persons with name containing string given
+  // return [true/false, personObj/null]
+  const findP = (name) => {
+    const n = name.toLowerCase()
+    const p = persons.filter(p => p.name === n)
+    const exists = p.length > 0 ? true : false
+    return [exists, p[0]]
+  }
+
+  // add new person to the list
   const addNewPerson = (e) => {
+
     e.preventDefault()
+    const [exists, p] = findP(newName)
 
-    const sameName = persons.filter(person => person.name === newName)
-    const nameExists = sameName.length > 0 ? true : false
-
-    if (nameExists) {
-      if (window.confirm(`${newName} is already added to the phone book,
-        replace the old number with a new one?`)) {
-        const person = persons.find(person=> person.name === newName)
-        const changedPerson = { ...person, number: newNumber }
+    if (exists) {
+      const msg = `${p.name} is already added to the phone book,
+        replace the old number with a new one?`
+      if (window.confirm(msg)) {
+        const newP = {
+          ...p,
+          number: newNumber
+        }
 
         personsService
-        .change(changedPerson)
+        .change(newP)
         .then(response => {
-          setPersons(persons.map(p => p.id !== changedPerson.id ? p : changedPerson))
+          const msg = `${newP.name} has been updated`
+          setPersons(persons.map(p => p.id !== newP.id ? p : newP))
+          sendNotification(msg, 'notification', 5000)
+        })
+        .catch(response => {
+          const msg = `information of ${newP.name}
+          has already beed removed from the server!`
+          sendNotification(msg, 'error', 5000)
         })
       }
     } else {
-      const personObject = {
+      const pObj = {
         name: newName,
         number: newNumber,
         show: true
       }
 
       personsService
-      .create(personObject)
+      .create(pObj)
       .then(response => {
+        const msg = `Added ${response.name}`
         setPersons(persons.concat(response))
-        setNotificationMessage(`Added ${response.name}`)
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 5000)
+        sendNotification(msg,'notification',5000)
       })
     }
+
+    // clear fields
     setNewName('')
     setNewNumber('')
   }
 
+  // update name typed
   const handleNameChange = (e) => {
     setNewName(e.target.value)
   }
 
+  // updated number typed
   const handleNumberChange = (e) => {
     setNewNumber(e.target.value)
   }
 
+  // update show tag on each person based on search query
   const handleSearchChange = (e) => {
-    const newSearch = e.target.value.toLowerCase()
-    const newPersons = persons.reduce((list, person) => {
-      const newPerson = {
-        ...person,
-        show: person.name.toLowerCase().includes(newSearch)
+    const updatedSearch = e.target.value.toLowerCase()
+
+    // create new updated list of persons
+    const newPs = persons.reduce((l, p) => {
+      const pName = p.name.toLowerCase()
+      const newP = {
+        ...p,
+        show: pName.includes(updatedSearch)
       }
-      return list.concat(newPerson)
+      return l.concat(newP)
     },[])
-    setPersons(newPersons)
+
+    // set the new list
+    setPersons(newPs)
   }
 
   // fetch persons from server
@@ -80,13 +118,19 @@ const App = () => {
   }, [])
 
   // remove person from server
-  const removePerson = (id, name) => {
-    if (window.confirm(`Delete ${name}?`)) {
+  const removePerson = (p) => {
+    if (window.confirm(`Delete ${p.name}?`)) {
       personsService
-      .remove(id)
+      .remove(p.id)
       .then(response => {
-        const newPersons = persons.filter(person => person.id !== id)
-        setPersons(newPersons)
+        const newPs = persons.filter(x => x.id !== p.id)
+        const msg = `${p.name} removed`
+        setPersons(newPs)
+        sendNotification(msg,'notification',5000)
+      })
+      .catch(error => {
+        const msg = `${p.name} already been removed`
+        sendNotification(msg,'error',5000)
       })
     }
   }
@@ -94,8 +138,13 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={notificationMessage}/>
-      <Filter change={handleSearchChange} />
+      <Notification
+        message={notificationMessage}
+        type={notificationType}
+      />
+      <Filter
+        change={handleSearchChange}
+      />
       <h2>add a new</h2>
       <PersonForm
         formOnSubmit={addNewPerson}
@@ -105,7 +154,10 @@ const App = () => {
         numberOnChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons data={persons} removePerson={removePerson}/>
+      <Persons
+        persons={persons}
+        removeP={removePerson}
+      />
     </div>
   )
 }
