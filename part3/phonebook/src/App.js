@@ -26,16 +26,15 @@ const App = () => {
   }
 
   // find persons with name containing string given
-  // return [true/false, personObj/null]
-  const findP = (name) => {
+  const findP = name => {
     const n = name.toLowerCase()
-    const p = persons.filter(p => p.name === n)
-    const exists = p.length > 0 ? true : false
-    return [exists, p[0]]
+    const p = persons.find(p => p.name === n)
+    const exists = p ? true : false
+    return [exists, p]
   }
 
   // add new person to the list
-  const addNewPerson = (e) => {
+  const addNewPerson = e => {
 
     e.preventDefault()
     const [exists, p] = findP(newName)
@@ -65,8 +64,7 @@ const App = () => {
     } else {
       const pObj = {
         name: newName,
-        number: newNumber,
-        show: true
+        number: newNumber
       }
 
       personsService
@@ -106,7 +104,7 @@ const App = () => {
   }, [])
 
   // remove person from server
-  const removePerson = (p) => {
+  const removePerson = p => {
     if (window.confirm(`Delete ${p.name}?`)) {
       personsService
       .remove(p.id)

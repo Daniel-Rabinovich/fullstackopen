@@ -15,7 +15,7 @@ const Persons = ({persons, search, removeP}) => {
 
     // return only persons that include search string
     const handleDisplay = () => {
-      // check if search was typed
+
       if (search === '')
         return persons
 
